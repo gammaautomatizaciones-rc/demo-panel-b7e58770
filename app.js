@@ -130,7 +130,7 @@ function renderChats(filter, q){
   drawIcons();
 }
 
-function openThread(c, item){
+function openThread(c, item, overlay){
   document.querySelectorAll('.chat-item').forEach(i=>i.classList.remove('active'));
   if (item) item.classList.add('active');
   document.getElementById('threadEmpty').hidden = true;
@@ -152,7 +152,8 @@ function openThread(c, item){
     m.append(b);
   });
   m.scrollTop = m.scrollHeight;
-  document.getElementById('threadPane').classList.add('open'); /* mobile */
+  /* overlay solo cuando el usuario elige un chat (mobile). En el arranque no, asi mobile ve la lista primero. */
+  if (overlay !== false) document.getElementById('threadPane').classList.add('open');
   drawIcons();
 }
 
@@ -261,6 +262,9 @@ function showView(name){
 /* ========================= INIT ========================= */
 document.addEventListener('DOMContentLoaded', ()=>{
   renderChats('todos','');
+  /* demo: arranca con la primera conversacion abierta, sin placeholder encima y sin overlay mobile */
+  const firstChat = document.querySelector('.chat-item');
+  if (firstChat) openThread(CHATS[0], firstChat, false);
   renderKpis(); renderBars(); renderActivity();
   renderContacts(''); renderBroadcasts(); renderConfig();
   document.getElementById('metricDate').textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
