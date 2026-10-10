@@ -13,6 +13,7 @@ function ico(name){
   i.setAttribute('data-lucide', name);
   return i;
 }
+function drawIcons(){ if (window.lucide) lucide.createIcons(); } /* guard: un CDN caido no debe matar el panel */
 const AV = ['#FFEB3B','#FFC107','#f59e0b','#22c55e','#3b82f6','#a78bfa','#f472b6','#2dd4bf'];
 const avColor = (s)=> AV[[...s].reduce((a,c)=>a+c.charCodeAt(0),0) % AV.length];
 const initials = (s)=> s.trim().split(/\s+/).slice(0,2).map(w=>w[0]).join('').toUpperCase();
@@ -126,7 +127,7 @@ function renderChats(filter, q){
     item.addEventListener('click', ()=> openThread(c, item));
     box.append(item);
   });
-  lucide.createIcons();
+  drawIcons();
 }
 
 function openThread(c, item){
@@ -152,7 +153,7 @@ function openThread(c, item){
   });
   m.scrollTop = m.scrollHeight;
   document.getElementById('threadPane').classList.add('open'); /* mobile */
-  lucide.createIcons();
+  drawIcons();
 }
 
 function renderKpis(){
@@ -167,7 +168,7 @@ function renderKpis(){
     c.append(top, val, el('div','kpi-label', k.label));
     g.append(c);
   });
-  lucide.createIcons();
+  drawIcons();
   countUp();
 }
 function countUp(){
@@ -198,7 +199,7 @@ function renderActivity(){
     body.append(el('div','act-txt', a.t), el('div','act-when', a.w));
     li.append(ib, body); u.append(li);
   });
-  lucide.createIcons();
+  drawIcons();
 }
 function renderContacts(q){
   const tb = document.getElementById('contactBody'); tb.textContent='';
@@ -244,7 +245,7 @@ function renderConfig(){
     sw.append(inp, el('span','slider'));
     row.append(ib, info, sw); g.append(row);
   });
-  lucide.createIcons();
+  drawIcons();
 }
 
 /* ========================= NAVEGACION (una sola vista visible) ========================= */
@@ -263,7 +264,7 @@ document.addEventListener('DOMContentLoaded', ()=>{
   renderKpis(); renderBars(); renderActivity();
   renderContacts(''); renderBroadcasts(); renderConfig();
   document.getElementById('metricDate').textContent = 'Actualizado ' + new Date().toLocaleTimeString('es-AR',{hour:'2-digit',minute:'2-digit'});
-  lucide.createIcons();
+  drawIcons();
 
   document.querySelectorAll('.rail-item').forEach(b=> b.addEventListener('click', ()=> showView(b.dataset.view)));
 
