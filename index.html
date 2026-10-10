@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Panel de Gestion de tu Bot de WhatsApp | GAMMA</title>
+  <meta name="description" content="Asi se ve el panel de control de un bot de WhatsApp de GAMMA: conversaciones en vivo, respuestas automaticas, metricas, contactos y estado del bot en un solo lugar.">
+  <link rel="canonical" href="https://gammaautomatizaciones-rc.github.io/demo-panel-b7e58770/">
+
+  <!-- Open Graph (preview al compartir por WhatsApp) -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Panel de Gestion de tu Bot de WhatsApp">
+  <meta property="og:description" content="Conversaciones, respuestas automaticas y metricas de tu bot, en tiempo real. Asi se veria tu panel.">
+  <meta property="og:image" content="https://gammaautomatizaciones-rc.github.io/demo-panel-b7e58770/og.png">
+  <meta property="og:url" content="https://gammaautomatizaciones-rc.github.io/demo-panel-b7e58770/">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- Favicon: engranaje G dorado GAMMA, inline SVG -->
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230f0f0f'/%3E%3Ctext x='16' y='23' font-family='Arial,sans-serif' font-size='20' font-weight='900' fill='%23FFEB3B' text-anchor='middle'%3EG%3C/text%3E%3C/svg%3E">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <div class="app">
+    <!-- ===== Top bar ===== -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="logo.png" alt="Logo GAMMA" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-name">Panel de Gestion</span>
+          <span class="brand-sub">Bot de WhatsApp</span>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <span class="bot-status" title="Estado del bot">
+          <span class="dot"></span>
+          <span class="bot-status-text">Conectado</span>
+        </span>
+        <span class="demo-badge">Demo</span>
+      </div>
+    </header>
+
+    <div class="shell">
+      <!-- ===== Nav rail (iconos, se expande con el mouse) ===== -->
+      <nav class="rail" aria-label="Navegacion principal">
+        <button class="rail-item active-view" data-view="chats" aria-label="Conversaciones">
+          <i data-lucide="message-square"></i><span class="rail-label">Conversaciones</span>
+        </button>
+        <button class="rail-item" data-view="metricas" aria-label="Metricas">
+          <i data-lucide="bar-chart-3"></i><span class="rail-label">Metricas</span>
+        </button>
+        <button class="rail-item" data-view="contactos" aria-label="Contactos">
+          <i data-lucide="users"></i><span class="rail-label">Contactos</span>
+        </button>
+        <button class="rail-item" data-view="difusion" aria-label="Difusion">
+          <i data-lucide="send"></i><span class="rail-label">Difusion</span>
+        </button>
+        <button class="rail-item rail-bottom" data-view="config" aria-label="Configuracion">
+          <i data-lucide="settings"></i><span class="rail-label">Configuracion</span>
+        </button>
+      </nav>
+
+      <main class="content">
+
+        <!-- ============ VISTA: CONVERSACIONES ============ -->
+        <section class="view view-chats active" id="view-chats">
+          <aside class="chat-list-pane">
+            <div class="list-head">
+              <h1>Conversaciones</h1>
+              <span class="list-count" id="chatCount">0</span>
+            </div>
+            <div class="list-filters" id="chatFilters">
+              <button class="filter active" data-filter="todos">Todos</button>
+              <button class="filter" data-filter="sin-leer">Sin leer</button>
+              <button class="filter" data-filter="bot-off">Con agente</button>
+            </div>
+            <div class="list-search">
+              <i data-lucide="search"></i>
+              <input type="text" id="chatSearch" placeholder="Buscar contacto..." autocomplete="off">
+            </div>
+            <div class="chat-items" id="chatItems"></div>
+          </aside>
+
+          <section class="thread-pane" id="threadPane">
+            <div class="thread-empty" id="threadEmpty">
+              <i data-lucide="message-square-text"></i>
+              <p>Elegi una conversacion para ver los mensajes</p>
+            </div>
+            <div class="thread" id="thread" hidden>
+              <div class="thread-head">
+                <button class="back-btn" id="backBtn" aria-label="Volver"><i data-lucide="arrow-left"></i></button>
+                <div class="thread-avatar" id="threadAvatar">A</div>
+                <div class="thread-id">
+                  <span class="thread-name" id="threadName">Contacto</span>
+                  <span class="thread-phone" id="threadPhone">+54 9 ...</span>
+                </div>
+                <div class="thread-actions">
+                  <span class="bot-pill" id="botPill"><span class="dot"></span><span id="botPillText">Bot activo</span></span>
+                </div>
+              </div>
+              <div class="messages" id="messages"></div>
+              <div class="composer">
+                <input type="text" id="composerInput" placeholder="Escribi un mensaje..." autocomplete="off">
+                <button id="composerSend" aria-label="Enviar"><i data-lucide="send-horizontal"></i></button>
+              </div>
+            </div>
+          </section>
+        </section>
+
+        <!-- ============ VISTA: METRICAS ============ -->
+        <section class="view view-metricas" id="view-metricas">
+          <div class="view-scroll">
+            <div class="view-head">
+              <h1>Metricas de hoy</h1>
+              <span class="view-sub" id="metricDate">Actualizado recien</span>
+            </div>
+            <div class="kpi-grid" id="kpiGrid"></div>
+
+            <div class="panels-2">
+              <div class="card">
+                <div class="card-head">
+                  <h2>Mensajes por dia</h2>
+                  <span class="card-tag">Ultima semana</span>
+                </div>
+                <div class="bars" id="weekBars"></div>
+              </div>
+              <div class="card">
+                <div class="card-head">
+                  <h2>Actividad reciente</h2>
+                </div>
+                <ul class="activity" id="activityList"></ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ VISTA: CONTACTOS ============ -->
+        <section class="view view-contactos" id="view-contactos">
+          <div class="view-scroll">
+            <div class="view-head">
+              <h1>Contactos</h1>
+              <span class="view-sub" id="contactCount">0 contactos</span>
+            </div>
+            <div class="list-search contact-search">
+              <i data-lucide="search"></i>
+              <input type="text" id="contactSearch" placeholder="Buscar por nombre o telefono..." autocomplete="off">
+            </div>
+            <div class="table-wrap">
+              <table class="data-table" id="contactTable">
+                <thead>
+                  <tr><th>Contacto</th><th>Telefono</th><th>Etiqueta</th><th>Ultimo mensaje</th><th>Estado</th></tr>
+                </thead>
+                <tbody id="contactBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============ VISTA: DIFUSION ============ -->
+        <section class="view view-difusion" id="view-difusion">
+          <div class="view-scroll">
+            <div class="view-head">
+              <h1>Campanas de difusion</h1>
+              <span class="view-sub">Envios masivos programados</span>
+            </div>
+            <div class="broadcast-grid" id="broadcastGrid"></div>
+          </div>
+        </section>
+
+        <!-- ============ VISTA: CONFIGURACION ============ -->
+        <section class="view view-config" id="view-config">
+          <div class="view-scroll">
+            <div class="view-head">
+              <h1>Configuracion del bot</h1>
+              <span class="view-sub">Como responde tu asistente</span>
+            </div>
+            <div class="config-list" id="configList"></div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.460.0/lucide.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
